@@ -17,6 +17,7 @@ import {
   animate,
   transition,
 } from '@angular/animations';
+import { CardsService } from '../../cards/services/cards-service';
 
 @Component({
   selector: 'app-navbar-mobile',
@@ -56,7 +57,11 @@ export class NavbarMobileComponent implements OnInit, OnDestroy {
   menuOpen = false;
   private routerSubscription?: Subscription;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private cardsService: CardsService
+  ) {}
 
   ngOnInit() {
     this.routerSubscription = this.router.events
@@ -104,6 +109,7 @@ export class NavbarMobileComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
         this.authService.logout();
+        this.cardsService.clearCache();
         this.closeMenu();
         this.router.navigate(['/auth/login']);
         Swal.fire(

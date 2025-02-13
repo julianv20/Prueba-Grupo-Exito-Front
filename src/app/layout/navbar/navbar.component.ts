@@ -5,6 +5,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../auth/services/auth-service';
 import { User } from '../../auth/interfaces/register.types';
 import Swal from 'sweetalert2';
+import { CardsService } from '../../cards/services/cards-service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,11 @@ import Swal from 'sweetalert2';
 export class NavbarComponent {
   @Input() items: NavItem[] = [];
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private cardsService: CardsService
+  ) {}
 
   get user(): User | null {
     return this.authService.getUser;
@@ -36,6 +41,7 @@ export class NavbarComponent {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
         this.authService.logout();
+        this.cardsService.clearCache();
         this.router.navigate(['/auth/login']);
         Swal.fire(
           'Sesión cerrada',
