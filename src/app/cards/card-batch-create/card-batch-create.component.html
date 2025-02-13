@@ -1,0 +1,180 @@
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto bg-white shadow-lg overflow-hidden rounded-3xl">
+    <div
+      class="bg-gradient-to-r from-white to-gray-200 px-6 py-4 border border-white/50 shadow-sm"
+    >
+      <h2 class="text-2xl font-bold text-gray-800">Crear Múltiples Tarjetas</h2>
+      <p class="text-gray-600 text-sm mt-1">
+        Complete los datos de las tarjetas
+      </p>
+    </div>
+
+    <div class="p-8">
+      <form [formGroup]="batchForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Lista de tarjetas -->
+        <div formArrayName="cards" class="space-y-8">
+          <div
+            *ngFor="let card of cards.controls; let i = index"
+            [formGroupName]="i"
+            class="p-6 border border-gray-200 rounded-lg relative"
+          >
+            <!-- Botón de eliminar -->
+            <button
+              type="button"
+              *ngIf="cards.length > 1"
+              (click)="removeCard(i)"
+              class="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <div class="grid gap-6 md:grid-cols-2">
+              <!-- Número de Tarjeta -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">
+                  Número de Tarjeta {{ i + 1 }}
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  >
+                    <svg
+                      class="h-5 w-5 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h12v1H4V6zm0 3h12v5H4V9z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    formControlName="cardNumber"
+                    class="pl-10 block w-full rounded-lg border-gray-200 bg-gray-50 shadow-sm focus:border-yellow-500 focus:ring-yellow-400 hover:bg-gray-50/80 transition-all duration-200 text-sm py-3"
+                    placeholder="Ingrese el número de tarjeta"
+                  />
+                </div>
+              </div>
+
+              <!-- Monto Inicial -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">
+                  Monto Inicial
+                </label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  >
+                    <span class="text-gray-500">$</span>
+                  </div>
+                  <input
+                    type="text"
+                    formControlName="initialAmount"
+                    class="pl-8 block w-full rounded-lg border-gray-200 bg-gray-50 shadow-sm focus:border-yellow-500 focus:ring-yellow-400 hover:bg-gray-50/80 transition-all duration-200 text-sm py-3"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div
+                  *ngIf="
+                    card.get('initialAmount')?.touched &&
+                    card.get('initialAmount')?.errors
+                  "
+                  class="bg-red-50 text-red-600 text-sm mt-1 px-3 py-1 rounded-md flex items-center"
+                >
+                  <svg
+                    class="h-4 w-4 mr-1.5 flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span *ngIf="card.get('initialAmount')?.errors?.['required']">
+                    El monto inicial es requerido
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón para agregar nueva tarjeta -->
+        <div class="flex justify-center">
+          <button
+            type="button"
+            (click)="addCard()"
+            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#E2681C] hover:bg-[#c95918] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#E2681C]"
+          >
+            <svg
+              class="h-5 w-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+            Agregar Nueva Tarjeta
+          </button>
+        </div>
+
+        <!-- Botón de Submit -->
+        <div class="pt-6">
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="w-full bg-[#E2681C] text-white font-medium py-3 px-4 hover:bg-[#c95918] focus:outline-none focus:ring-2 focus:ring-[#E2681C] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:shadow-lg flex items-center justify-center space-x-2 rounded-3xl cursor-pointer"
+          >
+            <svg
+              *ngIf="isLoading"
+              class="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            <span>{{ isLoading ? "Creando..." : "Crear Tarjetas" }}</span>
+          </button>
+        </div>
+
+        <div *ngIf="errorMessage" class="flex justify-center mt-2">
+          <span class="font-medium text-red-600">{{ errorMessage }}</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+{
+  "theme": {
+    "extend": {
+      "colors": {
+        "exito": {
+          "yellow": "#FFE800",
+          "yellow-light": "#FFF3B2"
+        }
+      },
+      "boxShadow": {
+        "gift": "0 0 15px rgba(0, 0, 0, 0.1), 0 0 30px rgba(0, 0, 0, 0.05)"
+      }
+    }
+  },
+  "plugins": {
+    "@tailwindcss/postcss": {}
+  }
+}

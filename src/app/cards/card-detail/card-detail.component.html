@@ -1,0 +1,278 @@
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+  @if (isLoading) {
+  <div class="flex justify-center items-center">
+    <p class="text-gray-600">Cargando...</p>
+  </div>
+  } @else if (error) {
+  <div class="bg-red-50 text-red-600 p-4 rounded-lg">
+    <p class="text-center">{{ error }}</p>
+  </div>
+  } @else { @if (card$ | async; as card) {
+  <div class="max-w-7xl mx-auto space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white shadow-lg overflow-hidden rounded-3xl">
+        <div
+          class="bg-gradient-to-r from-white to-gray-200 px-6 py-4 border border-white/50 shadow-sm"
+        >
+          <div class="flex justify-between items-start">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-800">
+                Detalles de la Tarjeta
+              </h2>
+              <p class="text-gray-600 text-sm mt-1">Información general</p>
+            </div>
+            <button
+              (click)="deleteCard(card.id)"
+              class="bg-red-400 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200 cursor-pointer"
+            >
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              <span>Eliminar</span>
+            </button>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <p class="text-sm text-gray-500">Número de Tarjeta</p>
+              <p class="text-base font-medium">{{ card.cardNumber }}</p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-sm text-gray-500">Monto Inicial</p>
+              <p class="text-base font-medium">
+                ${{ card.initialAmount | currency : "USD" : "" }}
+              </p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-sm text-gray-500">Balance Actual</p>
+              <p class="text-base font-medium">
+                ${{ card.currentBalance | currency : "USD" : "" }}
+              </p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-sm text-gray-500">Fecha de Creación</p>
+              <p class="text-base font-medium">{{ card.createdAt | date }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction Form Section -->
+      <div class="bg-white shadow-lg overflow-hidden rounded-3xl">
+        <div
+          class="bg-gradient-to-r from-white to-gray-200 px-6 py-4 border border-white/50 shadow-sm"
+        >
+          <h2 class="text-2xl font-bold text-gray-800">Nueva Transacción</h2>
+          <p class="text-gray-600 text-sm mt-1">
+            Complete los datos de la transacción
+          </p>
+        </div>
+        <div class="p-8">
+          <form
+            [formGroup]="transactionForm"
+            (ngSubmit)="onSubmit()"
+            class="space-y-6"
+          >
+            <div class="space-y-2">
+              <label
+                for="description"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Descripción
+              </label>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <svg
+                    class="h-5 w-5 text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h12v1H4V6zm0 3h12v5H4V9z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="description"
+                  formControlName="description"
+                  class="pl-10 block w-full rounded-lg border-gray-200 bg-gray-50 shadow-sm focus:border-yellow-500 focus:ring-yellow-400 hover:bg-gray-50/80 transition-all duration-200 text-sm py-3"
+                  placeholder="Descripción de la transacción"
+                />
+              </div>
+              @if (transactionForm.get('description')?.invalid &&
+              transactionForm.get('description')?.touched) {
+              <div
+                class="bg-red-50 text-red-600 text-sm mt-1 px-3 py-1 rounded-md flex items-center"
+              >
+                <svg
+                  class="h-4 w-4 mr-1.5 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span>La descripción es requerida</span>
+              </div>
+              }
+            </div>
+
+            <div class="space-y-2">
+              <label
+                for="amount"
+                class="block text-sm font-medium text-gray-700"
+              >
+                Monto
+              </label>
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <span class="text-gray-500">$</span>
+                </div>
+                <input
+                  type="text"
+                  id="amount"
+                  formControlName="amount"
+                  class="pl-8 block w-full rounded-lg border-gray-200 bg-gray-50 shadow-sm focus:border-yellow-500 focus:ring-yellow-400 hover:bg-gray-50/80 transition-all duration-200 text-sm py-3"
+                  placeholder="0.00"
+                />
+              </div>
+              @if (transactionForm.get('amount')?.invalid &&
+              transactionForm.get('amount')?.touched) {
+              <div
+                class="bg-red-50 text-red-600 text-sm mt-1 px-3 py-1 rounded-md flex items-center"
+              >
+                <svg
+                  class="h-4 w-4 mr-1.5 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span>El monto debe ser mayor a 0</span>
+              </div>
+              }
+            </div>
+
+            <div class="pt-6">
+              <button
+                type="submit"
+                class="w-full bg-[#E2681C] text-white font-medium py-3 px-4 hover:bg-[#c95918] focus:outline-none focus:ring-2 focus:ring-[#E2681C] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:shadow-lg flex items-center justify-center space-x-2 rounded-3xl cursor-pointer"
+              >
+                @if (isSubmitting) {
+                <svg
+                  class="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                } @else {
+                <svg
+                  class="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
+                </svg>
+                }
+                <span>{{
+                  isSubmitting ? "Procesando..." : "Crear Transacción"
+                }}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white shadow-lg overflow-hidden rounded-3xl">
+      <div
+        class="bg-gradient-to-r from-white to-gray-200 px-6 py-4 border border-white/50 shadow-sm"
+      >
+        <h2 class="text-2xl font-bold text-gray-800">
+          Historial de Transacciones
+        </h2>
+        <p class="text-gray-600 text-sm mt-1">Registro de movimientos</p>
+      </div>
+      <div class="p-6">
+        @if (isLoadingHistory) {
+        <div class="flex justify-center py-4">
+          <p class="text-gray-600">Cargando historial...</p>
+        </div>
+        } @else if (historyError) {
+        <div class="bg-red-50 text-red-600 p-4 rounded-lg">
+          <p class="text-center">{{ historyError }}</p>
+        </div>
+        } @else if (transactions.length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          @for (transaction of transactions; track transaction.id) {
+          <div class="bg-gray-50 p-4 rounded-lg space-y-2">
+            <div class="flex justify-between items-start">
+              <p class="text-gray-900 font-medium">
+                {{ transaction.description }}
+              </p>
+              <p class="text-gray-900 font-bold">${{ transaction.amount }}</p>
+            </div>
+            <p class="text-gray-500 text-sm">
+              {{ transaction.createdAt | date }}
+            </p>
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="text-center text-gray-600 py-4">
+          No hay transacciones disponibles
+        </p>
+        }
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div class="bg-red-50 text-red-600 p-4 rounded-lg max-w-md mx-auto">
+    <p class="text-center">No se encontró la tarjeta</p>
+  </div>
+  } }
+</div>

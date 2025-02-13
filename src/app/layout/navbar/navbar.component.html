@@ -1,0 +1,58 @@
+<nav class="bg-[#ffe800] shadow-md">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="relative flex h-20 items-center justify-between">
+      <!-- Logo/Brand -->
+      <div class="flex items-center">
+        <a
+          routerLink="/"
+          class="text-2xl font-bold text-gray-900 hover:text-gray-800 transition-colors"
+        >
+          Grupo Éxito
+        </a>
+      </div>
+
+      <!-- Navegación principal -->
+      <div class="flex-1 flex justify-center">
+        <div class="flex gap-8">
+          <ng-container *ngFor="let item of items">
+            <a
+              [routerLink]="item.link"
+              routerLinkActive="text-blue-600 font-semibold"
+              [routerLinkActiveOptions]="{ exact: true }"
+              #rla="routerLinkActive"
+              class="relative px-3 py-2.5 text-gray-800 hover:text-blue-700 transition-colors after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:transition-transform"
+              [class.after:scale-x-100]="rla.isActive"
+            >
+              {{ item.title }}
+            </a>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Sección de usuario y logout -->
+      <div class="flex items-center gap-6">
+        <div *ngIf="user" class="text-gray-800 font-medium">
+          {{ user.fullName | titlecase }}
+        </div>
+
+        <button
+          (click)="logout()"
+          class="px-4 py-2 text-gray-800 rounded-md hover:text-blue-700 transition-colors flex items-center gap-2 cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

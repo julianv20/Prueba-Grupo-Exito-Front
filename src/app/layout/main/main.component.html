@@ -1,0 +1,12 @@
+<div class="min-h-screen bg-gray-100">
+  <app-navbar class="hidden md:block" [items]="navbarItems"></app-navbar>
+
+  <app-navbar-mobile
+    class="md:hidden"
+    [items]="navbarItems"
+  ></app-navbar-mobile>
+
+  <main class="p-4">
+    <router-outlet />
+  </main>
+</div>
